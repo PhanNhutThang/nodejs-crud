@@ -26,7 +26,7 @@ let handleUserLogin = (email, password) => {
             let isExist = await checkUserEmail(email);
             if (isExist) {
                 let user = await db.User.findOne({
-                    attributes: ['email', 'roleId', 'password'],
+                    attributes: ['email', 'roleId', 'password', 'firstName', 'lastName'],
                     where: { email: email },
                     raw: true
                 });
@@ -114,26 +114,28 @@ let createNewUser = (data) => {
             if (check === true) {
                 resolve({
                     errCode: 1,
-                    message: 'Email đã được sử dụng, vui lòng chọn email khác!!!'
+                    errMessage: 'Email đã được sử dụng, vui lòng chọn email khác!!!'
+                })
+            } else {
+                let hashUserPasswordFromBcrypt = await hashUserPassword(data.password);
+                await db.User.create({
+                    email: data.email,
+                    password: hashUserPasswordFromBcrypt,
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    address: data.address,
+                    gender: data.gender === '1' ? true : false,
+                    phone: data.phone,
+                    khuvuc: data.khuvuc,
+                    roleId: data.roleId,
+                    image: data.image
+                })
+
+                resolve({
+                    errCode: 0,
+                    message: 'OK'
                 })
             }
-            let hashUserPasswordFromBcrypt = await hashUserPassword(data.password);
-            await db.User.create({
-                email: data.email,
-                password: hashUserPasswordFromBcrypt,
-                firstName: data.firstName,
-                lastName: data.lastName,
-                address: data.address,
-                gender: data.gender === '1' ? true : false,
-                phone: data.phone,
-                khuvuc: data.khuvuc,
-                roleId: data.roleId,
-                image: data.image
-            })
-            resolve({
-                errCode: 0,
-                message: 'OK'
-            })
         } catch (e) {
             reject(e);
         }
