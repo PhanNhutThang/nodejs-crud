@@ -200,10 +200,35 @@ let updateUserData = (data) => {
     })
 }
 
+let getLoaitkService = (typeInput) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!typeInput) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameters !'
+                })
+            }
+            else {
+                let res = {};
+                let loaitk = await db.Loaitk.findAll({
+                    where: { type: typeInput }
+                });
+                res.errCode = 0;
+                res.data = loaitk;
+                resolve(res);
+            }
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
 module.exports = {
     handleUserLogin: handleUserLogin,
     getAllUsers: getAllUsers,
     createNewUser: createNewUser,
     deleteUser: deleteUser,
-    updateUserData: updateUserData
+    updateUserData: updateUserData,
+    getLoaitkService: getLoaitkService,
 }
