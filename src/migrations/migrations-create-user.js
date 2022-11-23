@@ -24,12 +24,12 @@ module.exports = {
         type: Sequelize.STRING
       },
       gender: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.STRING
       },
       phone: {
         type: Sequelize.INTEGER
       },
-      khuvuc: {
+      area: {
         type: Sequelize.STRING
       },
       roleId: {

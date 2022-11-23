@@ -42,17 +42,17 @@ let handleUserLogin = (email, password) => {
                     }
                     else {
                         userData.errCode = 3;
-                        userData.errMessage = 'Wrong password';
+                        userData.errMessage = 'Sai mật khẩu';
                     }
                 }
                 else {
                     userData.errCode = 2;
-                    userData.errMessage = `User's not found~`
+                    userData.errMessage = `Không tìm thấy người dùng`
                 }
             }
             else {
                 userData.errCode = 1;
-                userData.errMessage = 'Your`s Email isn`t exist in your system. Plz try order email !!!'
+                userData.errMessage = 'Email không tồn tại. Vui lòng kiểm tra email!'
             }
             resolve(userData)
         } catch (e) {
@@ -124,9 +124,9 @@ let createNewUser = (data) => {
                     firstName: data.firstName,
                     lastName: data.lastName,
                     address: data.address,
-                    gender: data.gender === '1' ? true : false,
+                    gender: data.gender,
                     phone: data.phone,
-                    khuvuc: data.khuvuc,
+                    area: data.area,
                     roleId: data.roleId,
                     image: data.image
                 })
@@ -167,7 +167,7 @@ let deleteUser = (userId) => {
 let updateUserData = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.id) {
+            if (!data.id || !data.roleId || !data.area || !data.gender) {
                 resolve({
                     errCode: 2,
                     errMessage: 'Missing required parameters'
@@ -182,6 +182,9 @@ let updateUserData = (data) => {
                 user.lastName = data.lastName;
                 user.address = data.address;
                 user.phone = data.phone;
+                user.area = data.area;
+                user.gender = data.gender;
+                user.roleId = data.roleId;
 
                 await user.save();
                 resolve({

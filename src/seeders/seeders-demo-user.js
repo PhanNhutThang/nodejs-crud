@@ -10,7 +10,7 @@ module.exports = {
       address: 'DongThap',
       gender: 1,
       phone: '0704745647',
-      khuvuc: 'Tp.HCM',
+      area: 'Tp.HCM',
       roleId: 'R1',
       createdAt: new Date(),
       updatedAt: new Date()
