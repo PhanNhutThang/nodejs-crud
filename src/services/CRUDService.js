@@ -112,10 +112,24 @@ let deteleUserById = (userId) => {
     })
 }
 
+let getAllClient = () => {
+    return new Promise((resolve, reject) => {
+        try {
+            let clients = db.Client.findAll({
+                raw: true,
+            });
+            resolve(clients)
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 module.exports = {
     createNewUser: createNewUser,
     getAllUser: getAllUser,
     getUserInfoById: getUserInfoById,
     updateUserData: updateUserData,
-    deteleUserById: deteleUserById
+    deteleUserById: deteleUserById,
+    getAllClient: getAllClient
 }

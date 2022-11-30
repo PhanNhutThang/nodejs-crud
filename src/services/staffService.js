@@ -1,73 +1,70 @@
 import db from "../models/index";
 import bcrypt from 'bcryptjs';
-import { resolve } from "path";
-// import { resolve } from "path";
-// import { rejects } from "assert";
-// import { waitForDebugger } from "inspector";
-// import { READUNCOMMITTED } from "sequelize/types/table-hints";
+
+
 const salt = bcrypt.genSaltSync(10);
 
-let hashUserPassword = (password) => {
+let hashStaffPassword = (password) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let hashUserPassword = await bcrypt.hashSync(password, salt);
-            resolve(hashUserPassword);
+            let hashStaffPassword = await bcrypt.hashSync(password, salt);
+            resolve(hashStaffPassword);
         } catch (e) {
             reject(e);
         }
     })
 }
 
-let handleUserLogin = (email, password) => {
+let handleStaffLogin = (email, password) => {
     return new Promise(async (resolve, rejects) => {
         try {
-            let userData = {};
+            let staffData = {};
 
-            let isExist = await checkUserEmail(email);
+            let isExist = await checkStaffEmail(email);
             if (isExist) {
-                let user = await db.User.findOne({
-                    attributes: ['email', 'roleId', 'password', 'firstName', 'lastName'],
+                let staff = await db.Staff.findOne({
+                    attributes: ['email', 'roleid', 'password', 'firstName', 'lastName'],
                     where: { email: email },
                     raw: true
                 });
-                if (user) {
+                if (staff) {
                     //let check = true;
-                    let check = await bcrypt.compareSync(password, user.password); //false
+                    let check = await bcrypt.compareSync(password, staff.password); //false
                     if (check) {
-                        userData.errCode = 0;
-                        userData.errMessage = 'OK';
+                        staffData.errCode = 0;
+                        staffData.errMessage = 'OK';
 
-                        delete user.password;
-                        userData.user = user;
+                        delete staff.password;
+                        staffData.staff = staff;
                     }
                     else {
-                        userData.errCode = 3;
-                        userData.errMessage = 'Sai mật khẩu';
+                        staffData.errCode = 3;
+                        staffData.errMessage = 'Sai mật khẩu';
                     }
                 }
                 else {
-                    userData.errCode = 2;
-                    userData.errMessage = `Không tìm thấy người dùng`
+                    staffData.errCode = 2;
+                    staffData.errMessage = `Không tìm thấy người dùng`
                 }
             }
             else {
-                userData.errCode = 1;
-                userData.errMessage = 'Email không tồn tại. Vui lòng kiểm tra email!'
+                staffData.errCode = 1;
+                staffData.errMessage = 'Email không tồn tại. Vui lòng kiểm tra email!'
             }
-            resolve(userData)
+            resolve(staffData)
         } catch (e) {
             rejects(e)
         }
     })
 }
 
-let checkUserEmail = (userEmail) => {
+let checkStaffEmail = (staffEmail) => {
     return new Promise(async (resolve, rejects) => {
         try {
-            let user = await db.User.findOne({
-                where: { email: userEmail }
+            let staff = await db.Staff.findOne({
+                where: { email: staffEmail }
             })
-            if (user) {
+            if (staff) {
                 resolve(true)
             }
             else {
@@ -79,26 +76,26 @@ let checkUserEmail = (userEmail) => {
     })
 }
 
-let getAllUsers = (userId) => {
+let getAllStaffs = (staffId) => {
     return new Promise(async (resolve, rejects) => {
         try {
-            let users = '';
-            if (userId === 'ALL') {
-                users = await db.User.findAll({
+            let staffs = '';
+            if (staffId === 'ALL') {
+                staffs = await db.Staff.findAll({
                     attributes: {
                         exclude: ['password']
                     }
                 })
             }
-            if (userId && userId !== 'ALL') {
-                users = await db.User.findOne({
-                    where: { id: userId },
+            if (staffId && staffId !== 'ALL') {
+                staffs = await db.Staff.findOne({
+                    where: { id: staffId },
                     attributes: {
                         exclude: ['password']
                     }
                 })
             }
-            resolve(users)
+            resolve(staffs)
         }
         catch (e) {
             rejects(e);
@@ -106,32 +103,32 @@ let getAllUsers = (userId) => {
     })
 }
 
-let createNewUser = (data) => {
+let createNewStaff = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
             // check email is exist
-            let check = await checkUserEmail(data.email);
+            let check = await checkStaffEmail(data.email);
             if (check === true) {
                 resolve({
                     errCode: 1,
                     errMessage: 'Email đã được sử dụng, vui lòng chọn email khác!!!'
                 })
             } else {
-                let hashUserPasswordFromBcrypt = await hashUserPassword(data.password);
-                await db.User.create({
-                    email: data.email,
-                    password: hashUserPasswordFromBcrypt,
+                let hashStaffPasswordFromBcrypt = await hashStaffPassword(data.password);
+                await db.Staff.create({
                     firstName: data.firstName,
                     lastName: data.lastName,
+                    email: data.email,
+                    password: hashStaffPasswordFromBcrypt,
                     address: data.address,
                     gender: data.gender,
                     phone: data.phone,
-                    area: data.area,
-                    roleId: data.roleId,
-                    image: data.avatar
-
+                    roleid: data.roleid,
+                    image: data.avatar,
+                    salary: data.salary,
+                    // star: data.star,
+                    // evaluate: data.evaluate
                 })
-
                 resolve({
                     errCode: 0,
                     message: 'OK'
@@ -142,22 +139,19 @@ let createNewUser = (data) => {
         }
     })
 }
-let deleteUser = (userId) => {
+let deleteStaff = (staffId) => {
     return new Promise(async (resolve, reject) => {
-        let foundUser = await db.User.findOne({
-            where: { id: userId }
+        let foundStaff = await db.Staff.findOne({
+            where: { id: staffId }
         })
-        if (!foundUser) {
+        if (!foundStaff) {
             resolve({
                 errCode: 2,
                 errMessage: `The user isn't exist`
             })
         }
-        // if (foundUser) {
-        //     await foundUser.destroy();
-        // }
-        await db.User.destroy({
-            where: { id: userId }
+        await db.Staff.destroy({
+            where: { id: staffId }
         })
         resolve({
             errCode: 0,
@@ -165,39 +159,42 @@ let deleteUser = (userId) => {
         })
     })
 }
-let updateUserData = (data) => {
+let updateStaffData = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.id || !data.roleId || !data.area || !data.gender) {
+            if (!data.id || !data.roleid || !data.gender) {
                 resolve({
                     errCode: 2,
                     errMessage: 'Missing required parameters'
                 })
             }
-            let user = await db.User.findOne({
+            let staff = await db.Staff.findOne({
                 where: { id: data.id },
                 raw: false
             })
-            if (user) {
-                user.firstName = data.firstName;
-                user.lastName = data.lastName;
-                user.address = data.address;
-                user.phone = data.phone;
-                user.area = data.area;
-                user.gender = data.gender;
-                user.roleId = data.roleId;
+            if (staff) {
+                staff.firstName = data.firstName;
+                staff.lastName = data.lastName;
+                staff.address = data.address;
+                staff.phone = data.phone;
+                staff.gender = data.gender;
+                staff.roleid = data.roleid;
+                staff.salary = data.salary;
+                // staff.star = data.star;
+                // staff.evaluate = data.evaluate;
                 if (data.avatar) {
-                    user.image = data.avatar;
+                    staff.image = data.avatar;
                 }
-                await user.save();
+
+                await staff.save();
                 resolve({
                     errCode: 0,
-                    message: 'Update the user succeeds!!!!'
+                    message: 'Update the staff succeeds!!!!'
                 })
             } else {
                 resolve({
                     errCode: 1,
-                    errMessage: `User's not found!!!`
+                    errMessage: `Staff's not found!!!`
                 });
             }
         } catch (e) {
@@ -231,10 +228,10 @@ let getLoaitkService = (typeInput) => {
 }
 
 module.exports = {
-    handleUserLogin: handleUserLogin,
-    getAllUsers: getAllUsers,
-    createNewUser: createNewUser,
-    deleteUser: deleteUser,
-    updateUserData: updateUserData,
+    handleStaffLogin: handleStaffLogin,
+    getAllStaffs: getAllStaffs,
+    createNewStaff: createNewStaff,
+    deleteStaff: deleteStaff,
+    updateStaffData: updateStaffData,
     getLoaitkService: getLoaitkService,
 }
