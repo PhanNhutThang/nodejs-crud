@@ -3,6 +3,7 @@ import homeController from "../controllers/homeController";
 import userController from "../controllers/userController";
 import clientController from "../controllers/clientController";
 import staffController from "../controllers/staffController";
+import serviceController from '../controllers/serviceController';
 
 let router = express.Router();
 
@@ -34,6 +35,10 @@ let initWebRoutes = (app) => {
     router.delete('/api/delete-staff', staffController.handleDeleteStaff);
     router.put('/api/edit-staff', staffController.handleEditStaff);
 
+    router.get('/api/get-all-services', serviceController.handleGetAllServices);
+    router.post('/api/create-new-service', serviceController.handleCreateNewService);
+    router.delete('/api/delete-service', serviceController.handleDeleteService);
+    router.put('/api/edit-service', serviceController.handleEditService);
 
     router.get('/api/loaitk', userController.getLoaitk);
 
