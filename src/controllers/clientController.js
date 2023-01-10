@@ -3,25 +3,25 @@ import { resolve } from "path";
 import db from "../models";
 import clientService from "../services/clientService";
 
-// let handleLogin = async (req, res) => {
-//     let email = req.body.email;
-//     let password = req.body.password;
+let handleLogin = async (req, res) => {
+    let email = req.body.email;
+    let password = req.body.password;
 
-//     if (!email || !password) {
-//         return res.status(500).json({
-//             errCode: 1,
-//             message: 'Vui lòng nhập email hoặc password !!!'
-//         })
-//     }
-//     let clientData = await clientService.handleClientLogin(email, password);
-//     console.log(clientData)
-//     return res.status(200).json({
+    if (!email || !password) {
+        return res.status(500).json({
+            errCode: 1,
+            message: 'Vui lòng nhập email hoặc password !!!'
+        })
+    }
+    let clientData = await clientService.handleClientLogin(email, password);
+    console.log(clientData)
+    return res.status(200).json({
 
-//         errCode: clientData.errCode,
-//         message: clientData.errMessage,
-//         khachhang: clientData.khachhang ? clientData.khachhang : {}
-//     })
-// }
+        errCode: clientData.errCode,
+        message: clientData.errMessage,
+        client: clientData.client ? clientData.client : {}
+    })
+}
 
 let handleGetAllClients = async (req, res) => {
     let id = req.query.id; //ALL, id
@@ -76,7 +76,7 @@ let handleDeleteClient = async (req, res) => {
 // }
 
 module.exports = {
-    //handleLogin: handleLogin,
+    handleLogin: handleLogin,
     handleGetAllClients: handleGetAllClients,
     handleCreateNewClient: handleCreateNewClient,
     handleEditClient: handleEditClient,

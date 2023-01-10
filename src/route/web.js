@@ -24,12 +24,13 @@ let initWebRoutes = (app) => {
     router.put('/api/edit-user', userController.handleEditUser);
     router.delete('/api/delete-user', userController.handleDeleteUser);
 
+    router.post('/api/login-client', clientController.handleLogin)
     router.get('/api/get-all-clients', clientController.handleGetAllClients);
     router.post('/api/create-new-client', clientController.handleCreateNewClient);
     router.delete('/api/delete-client', clientController.handleDeleteClient);
     router.put('/api/edit-client', clientController.handleEditClient);
 
-
+    router.post('/api/login-staff', staffController.handleLogin)
     router.get('/api/get-all-staffs', staffController.handleGetAllStaffs);
     router.post('/api/create-new-staff', staffController.handleCreateNewStaff);
     router.delete('/api/delete-staff', staffController.handleDeleteStaff);
