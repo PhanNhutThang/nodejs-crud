@@ -24,8 +24,13 @@ let connectDB = async () => {
         console.error('Unable to connect to the database:', error);
     }
 }
+pool.getConnection((err, conn) => {
+    if (err) console.log(err)
+    console.log("Connected successfully")
+})
 
-module.exports = connectDB;
+module.exports = connectDB, pool.promise()
+
 // const mysql = require('mysql2')
 
 // const pool = mysql.createPool({
