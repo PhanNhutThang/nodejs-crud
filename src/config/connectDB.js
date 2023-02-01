@@ -1,9 +1,18 @@
 const { Sequelize } = require('sequelize');
-
+const mysql = require('mysql2')
 const sequelize = new Sequelize('nhutthangtestnodejs', 'root', null, {
-    host: 'localhost',
+    // host: 'localhost',
+    // dialect: 'mysql',
+    // logging: false
+    host: process.env.DB_HOST,
+    user: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DBNAME,
+    waitForConnections: true,
+    connectionLimit: 10,
     dialect: 'mysql',
-    logging: false
+    logging: false,
+    queueLimit: 0
 });
 // const mysql = require('mysql2')
 
