@@ -27,7 +27,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       phone: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       area: {
         type: Sequelize.STRING
@@ -36,7 +36,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       image: {
-        type: Sequelize.STRING
+        type: Sequelize.BLOB('long')
       },
       createdAt: {
         allowNull: false,

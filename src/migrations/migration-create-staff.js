@@ -31,13 +31,13 @@ module.exports = {
                 type: Sequelize.INTEGER
             },
             phone: {
-                type: Sequelize.INTEGER
+                type: Sequelize.STRING
             },
             roleid: {
                 type: Sequelize.STRING
             },
             image: {
-                type: Sequelize.STRING
+                type: Sequelize.BLOB('long')
             },
             star: {
                 type: Sequelize.STRING

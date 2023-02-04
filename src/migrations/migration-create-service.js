@@ -19,7 +19,7 @@ module.exports = {
                 type: Sequelize.FLOAT
             },
             image: {
-                type: Sequelize.STRING
+                type: Sequelize.BLOB('long')
             },
             createdAt: {
                 allowNull: false,
