@@ -226,7 +226,32 @@ let getLoaitkService = (typeInput) => {
         }
     })
 }
-
+let getOneStaffs = (staffId) => {
+    return new Promise(async (resolve, rejects) => {
+        try {
+            let staffs = '';
+            if (staffId === 'ALL') {
+                staffs = await db.Staff.findAll({
+                    attributes: {
+                        exclude: ['password']
+                    }
+                })
+            }
+            if (staffId && staffId !== 'ALL') {
+                staffs = await db.Staff.findOne({
+                    where: { id: staffId },
+                    attributes: {
+                        exclude: ['password']
+                    }
+                })
+            }
+            resolve(staffs)
+        }
+        catch (e) {
+            rejects(e);
+        }
+    })
+}
 module.exports = {
     handleStaffLogin: handleStaffLogin,
     getAllStaffs: getAllStaffs,
@@ -234,4 +259,5 @@ module.exports = {
     deleteStaff: deleteStaff,
     updateStaffData: updateStaffData,
     getLoaitkService: getLoaitkService,
+    getOneStaffs: getOneStaffs,
 }

@@ -219,12 +219,38 @@ let updateClientData = (data) => {
 //         }
 //     })
 // }
-
+let getOneClients = (clientId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let clients = '';
+            if (clientId === 'ALL') {
+                clients = await db.Client.findAll({
+                    attributes: {
+                        exclude: ['password']
+                    }
+                })
+            }
+            if (clientId && clientId !== 'ALL') {
+                clients = await db.Client.findOne({
+                    where: { id: clientId },
+                    attributes: {
+                        exclude: ['password']
+                    }
+                })
+            }
+            resolve(clients)
+        }
+        catch (e) {
+            reject(e);
+        }
+    })
+}
 module.exports = {
     handleClientLogin: handleClientLogin,
     getAllClients: getAllClients,
     createNewClient: createNewClient,
     deleteClient: deleteClient,
     updateClientData: updateClientData,
+    getOneClients: getOneClients,
     // getLoaitkService: getLoaitkService,
 }

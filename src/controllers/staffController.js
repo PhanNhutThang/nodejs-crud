@@ -71,6 +71,24 @@ let getLoaitk = async (req, res) => {
         })
     }
 }
+let handleGetOneStaffs = async (req, res) => {
+    let id = req.body.id; //ALL, id
+
+    if (!id) {
+        return res.status(200).json({
+            errCode: 1,
+            errMessage: "Missing required parameter",
+            staffs: []
+        })
+    }
+
+    let staffs = await staffService.getOneStaffs(id);
+    return res.status(200).json({
+        errCode: 0,
+        errMessage: "OK",
+        staffs
+    })
+}
 
 module.exports = {
     handleLogin: handleLogin,
@@ -79,5 +97,6 @@ module.exports = {
     handleEditStaff: handleEditStaff,
     handleDeleteStaff: handleDeleteStaff,
     getLoaitk: getLoaitk,
+    handleGetOneStaffs: handleGetOneStaffs,
 
 }

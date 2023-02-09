@@ -29,12 +29,14 @@ let initWebRoutes = (app) => {
     router.post('/api/create-new-client', clientController.handleCreateNewClient);
     router.delete('/api/delete-client', clientController.handleDeleteClient);
     router.put('/api/edit-client', clientController.handleEditClient);
+    router.get('/api/get-one-clients', clientController.handleGetOneClients);
 
     router.post('/api/login-staff', staffController.handleLogin)
     router.get('/api/get-all-staffs', staffController.handleGetAllStaffs);
     router.post('/api/create-new-staff', staffController.handleCreateNewStaff);
     router.delete('/api/delete-staff', staffController.handleDeleteStaff);
     router.put('/api/edit-staff', staffController.handleEditStaff);
+    router.get('/api/get-one-staffs', staffController.handleGetOneStaffs);
 
     router.get('/api/get-all-services', serviceController.handleGetAllServices);
     router.post('/api/create-new-service', serviceController.handleCreateNewService);

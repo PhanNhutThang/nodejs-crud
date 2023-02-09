@@ -74,13 +74,31 @@ let handleDeleteClient = async (req, res) => {
 //         })
 //     }
 // }
+let handleGetOneClients = async (req, res) => {
+    let id = req.body.id; //ALL, id
 
+    if (!id) {
+        return res.status(200).json({
+            errCode: 1,
+            errMessage: "Missing required parameter",
+            clients: []
+        })
+    }
+
+    let clients = await clientService.getOneClients(id);
+    return res.status(200).json({
+        errCode: 0,
+        errMessage: "OK",
+        clients
+    })
+}
 module.exports = {
     handleLogin: handleLogin,
     handleGetAllClients: handleGetAllClients,
     handleCreateNewClient: handleCreateNewClient,
     handleEditClient: handleEditClient,
     handleDeleteClient: handleDeleteClient,
+    handleGetOneClients: handleGetOneClients,
     // getLoaitk: getLoaitk,
 
 }
